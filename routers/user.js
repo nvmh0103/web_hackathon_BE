@@ -1,20 +1,36 @@
 const express= require('express');
-const User=require('../models/user');
 const router= new express.Router();
-// const auth= require('../middlewares/auth');
+const auth= require('../middlewares/auth');
+const userController=require('../controllers/usersController')
 
-router.post('/users', async (req, res) => {
-    const user=new User(req.body);
+// create user
+router.post('/users', userController.createUser);
 
-    try {
-        await user.save();
-        const token= await user.generateAuthToken();
-        res.status(201).send( { user, token});
-    }
-    catch (e) {
-        res.status(400).send(e);
-    }
+// login 
+router.post('/users/login', userController.loginUser);
 
-})
+// user profile
+router.get('/users/me', auth ,userController.getProfile);
+
+// logout(delete token)
+router.post('/users/logout', auth, userController.logOut);
+
+// delete user
+router.delete('/users/me', auth, userController.deleteUser);
+
+// change user
+router.patch('/users/me', auth,userController.changeUser);
+
+
+// router.get('/users/getEmail', async(req, res) =>{
+//     try {
+//         const found= await User.findByEmail(req.body.email);
+//         if (found)
+//             res.status(200).send('Found!');
+//     } catch (e){
+//         res.status(404).send('Not found email');
+//     }
+// })
+
 
 module.exports=router;
