@@ -1,5 +1,5 @@
 const User= require('../models/user');
-
+const nodeMailer=require('nodemailer');
 class userController{
     //create user
     async createUser(req, res) {
@@ -8,6 +8,23 @@ class userController{
     try {
         await user.save();
         const token= await user.generateAuthToken();
+        let transporter= nodeMailer.createTransport({
+            host: "in-v3.mailjet.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: "03e6d39b5921bd6a58633253879e076e",
+                pass: "756e4eb57b952b8319b83186d025fd44",
+            },
+        });
+        let info= await transporter.sendMail({
+            from:'"Social study" <minhhoang132001@gmail.com>',
+            to: user.email,
+            subject: "Welcome",
+            text: "Thanks for registering!"
+        });
+        console.log("message sent: ", info.messageId );
+        
         res.status(201).send( { user, token});
         }
     catch (e) {
