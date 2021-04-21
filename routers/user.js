@@ -9,6 +9,12 @@ router.post('/users', userController.createUser);
 // verify user
 router.post('/verify', userController.verify)
 
+// forget password
+router.post('/forgetPassword', userController.forgetPassword);
+
+// reset password
+router.post('/resetPassword', userController.resetPassword);
+
 // login 
 router.post('/users/login', userController.loginUser);
 

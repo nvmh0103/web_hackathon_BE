@@ -2,6 +2,8 @@ const User= require('../models/user');
 const nodeMailer=require('nodemailer');
 const sendEmail=require('../utils/email/sendEmail')
 const jwt=require('jsonwebtoken');
+const crypto=require('crypto');
+const bcrypt=require('bcryptjs');
 class userController{
     //create user
     async createUser(req, res) {
@@ -36,7 +38,7 @@ class userController{
             if (token){
                 jwt.verify(token,'thisisme',async(err, decodedToken) => {
                     if (err){
-                        return res.status(400).json({error: "Incorect or Expired link"});
+                       throw new Error("Expired or wrong token!");
                     }
                     const {email}=decodedToken;
                     const user= await User.findOne({email});
@@ -46,21 +48,73 @@ class userController{
             res.status(201).json({message: "Verify success"});
             }
         } catch (e){
-            res.status(400).json({error: "something wrong happened!"});
+            res.status(400).send(e);
         }
     }
 
+    //forget password
+    async forgetPassword(req, res){
+        try{
+            const user= await User.findOne({email: req.body.email});
+            console.log(user);
+            if (!user){
+                throw new Error("not found user!");
+            }
+            user.tokens=[];
+            const resetToken=crypto.randomBytes(32).toString("hex");
+            console.log("here");
+            const hash=await bcrypt.hash(resetToken,8);
+            const token=jwt.sign({email: user.email, resetLink: hash},'thisisme',{expiresIn:'20m'});
+            user.resetLink=hash;
+            const link=`localhost:3000/forgetPassword/${token}`;
+            sendEmail(
+                user.email,
+                "Reset your password",
+                {
+                    name: user.hoTen,
+                    link: link,
+                },
+                "./template/requestResetPassword.handlebars"
+            )
+            await user.save();
+            res.status(200).json({message:"Please check your mail for reset link!"});
+        } catch (e){
+            res.status(400).send(e);
+        }
+    }
+    // reset password
+    async resetPassword(req, res){
+        try{
+
+            const token= req.body.token;
+            if (token){
+                jwt.verify(token,'thisisme',async(err, decodedToken) => {
+                    if (err){
+                        return res.status(400).json({error: "Incorect or Expired link"});
+                    }
+                    const {email, resetLink}=decodedToken;
+                    const user= await User.findOne({email});
+                    const isMatch=bcrypt.compare(user.resetLink, resetLink);
+                    if (!isMatch){
+                        throw new Error("Token is wrong or expired!");
+                    }
+                    user.matKhau=req.body.matKhau;
+                    await user.save();
+                    res.status(200).json({message:"Success"});
+                })
+            }
+        } catch(e){
+            res.status(400).send(e);
+            }
+    }
     //login
     async loginUser(req, res){
         try {
             const user= await User.findByCredentials(req.body.email, req.body.matKhau);
             const token= await user.generateAuthToken();
-            res.send({
-                user,
-                token,
-            });
+            res.status(200).json({message: "Logged in!"});
         } catch (e) {
-            res.status(400).send(e);
+            res.status(400).json({error: "Cant login!"});
         }
     }
 
