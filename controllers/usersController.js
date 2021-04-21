@@ -1,5 +1,7 @@
 const User= require('../models/user');
 const nodeMailer=require('nodemailer');
+const sendEmail=require('../utils/email/sendEmail')
+const jwt=require('jsonwebtoken');
 class userController{
     //create user
     async createUser(req, res) {
@@ -8,27 +10,43 @@ class userController{
     try {
         await user.save();
         const token= await user.generateAuthToken();
-        let transporter= nodeMailer.createTransport({
-            host: "in-v3.mailjet.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: "03e6d39b5921bd6a58633253879e076e",
-                pass: "756e4eb57b952b8319b83186d025fd44",
+        const verifyToken=jwt.sign({ email: user.email },'thisisme',{expiresIn:'20m'});
+        const link=`localhost:3000/verify/${verifyToken}`
+        sendEmail(
+            user.email,
+            "Verify your account for social study",
+            {
+                name: user.hoTen,
+                link: link,
             },
-        });
-        let info= await transporter.sendMail({
-            from:'"Social study" <minhhoang132001@gmail.com>',
-            to: user.email,
-            subject: "Welcome",
-            text: "Thanks for registering!"
-        });
-        console.log("message sent: ", info.messageId );
-        
-        res.status(201).send( { user, token});
+            "./template/accountActivation.handlebars"
+        )
+        res.status(200).json({message:"Please verify your account"});
         }
-    catch (e) {
-    res.status(400).send(e);
+        catch (e) {
+            res.status(400).send(e);
+        }
+    }
+
+    // verify user
+    async verify(req, res){
+        try{
+
+            const token= req.body.token;
+            if (token){
+                jwt.verify(token,'thisisme',async(err, decodedToken) => {
+                    if (err){
+                        return res.status(400).json({error: "Incorect or Expired link"});
+                    }
+                    const {email}=decodedToken;
+                    const user= await User.findOne({email});
+                    user.isVerify=true;
+                    await user.save();
+                })
+            res.status(201).json({message: "Verify success"});
+            }
+        } catch (e){
+            res.status(400).json({error: "something wrong happened!"});
         }
     }
 

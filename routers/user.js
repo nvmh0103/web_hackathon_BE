@@ -6,6 +6,9 @@ const userController=require('../controllers/usersController')
 // create user
 router.post('/users', userController.createUser);
 
+// verify user
+router.post('/verify', userController.verify)
+
 // login 
 router.post('/users/login', userController.loginUser);
 
