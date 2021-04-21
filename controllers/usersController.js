@@ -13,7 +13,7 @@ class userController{
         await user.save();
         const token= await user.generateAuthToken();
         const verifyToken=jwt.sign({ email: user.email },'thisisme',{expiresIn:'20m'});
-        const link=`localhost:3000/verify/${verifyToken}`
+        const link=`/verify/${verifyToken}`
         sendEmail(
             user.email,
             "Verify your account for social study",
@@ -65,7 +65,7 @@ class userController{
             const hash=await bcrypt.hash(resetToken,8);
             const token=jwt.sign({email: user.email, resetLink: hash},'thisisme',{expiresIn:'20m'});
             user.resetLink=hash;
-            const link=`localhost:3000/forgetPassword/${token}`;
+            const link=`/forgetPassword/${token}`;
             sendEmail(
                 user.email,
                 "Reset your password",
