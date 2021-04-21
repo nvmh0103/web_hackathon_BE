@@ -23,7 +23,7 @@ class userController{
             },
             "./template/accountActivation.handlebars"
         )
-        res.status(200).json({message:"Please verify your account"});
+        res.status(200).json({message:"Please verify your account",token});
         }
         catch (e) {
             res.status(400).send(e);
@@ -55,7 +55,6 @@ class userController{
     async forgetPassword(req, res){
         try{
             const user= await User.findOne({email: req.body.email});
-            console.log(user);
             if (!user){
                 throw new Error("not found user!");
             }
@@ -111,7 +110,7 @@ class userController{
         try {
             const user= await User.findByCredentials(req.body.email, req.body.matKhau);
             const token= await user.generateAuthToken();
-            res.status(200).json({message: "Logged in!"});
+            res.status(200).json({message: "Logged in!",token});
         } catch (e) {
             res.status(400).json({error: "Cant login!"});
         }
@@ -131,9 +130,9 @@ class userController{
     
             await req.user.save();
     
-            res.send();
+            res.status(200).json({message: "logged out!"});
         } catch (e) {
-            res.status(500).send();
+            res.status(500).json({message: "something wrong happend!"});
         }
     }
     //delete
