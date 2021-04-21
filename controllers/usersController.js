@@ -51,7 +51,6 @@ class userController{
             res.status(400).send(e);
         }
     }
-
     //forget password
     async forgetPassword(req, res){
         try{
