@@ -108,7 +108,7 @@ class userController{
     //login
     async loginUser(req, res){
         try {
-            const user= await User.findByCredentials(req.body.email, req.body.matKhau);
+            const user= await User.findByCredentials(req.body.taiKhoan, req.body.matKhau);
             const token= await user.generateAuthToken();
             res.status(200).json({message: "Logged in!",token});
         } catch (e) {

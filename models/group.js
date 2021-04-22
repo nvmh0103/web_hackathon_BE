@@ -1,4 +1,5 @@
 
+const { ObjectId } = require('bson');
 const mongoose=require('mongoose');
 
 const groupSchema=new mongoose.Schema({
@@ -10,6 +11,11 @@ const groupSchema=new mongoose.Schema({
     nguoiTao:{
         type: String,
     },
+    users:[{
+        user:{
+            type: ObjectId,
+        }
+    }]
 
 },{
     timestamps:true,

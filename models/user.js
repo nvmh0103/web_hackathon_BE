@@ -9,6 +9,7 @@ const userSchema= new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
+        unique:true,
     },
     matKhau: {
         type: String,
@@ -85,8 +86,8 @@ userSchema.methods.toJSON= function () {
 
 
 // login
-userSchema.statics.findByCredentials = async (email, password) => {
-    const user= await User.findOne({ email });
+userSchema.statics.findByCredentials = async (taiKhoan, password) => {
+    const user= await User.findOne({ taiKhoan });
 
     if (!user){
         throw new Error('Unable to login!');
