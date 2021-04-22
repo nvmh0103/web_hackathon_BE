@@ -4,7 +4,7 @@ const auth= require('../middlewares/auth');
 const userController=require('../controllers/usersController')
 
 // create user
-router.post('/users', userController.createUser);
+router.post('/users',userController.createUser);
 
 // verify user
 router.post('/verify', userController.verify)
