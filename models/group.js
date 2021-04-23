@@ -15,6 +15,11 @@ const groupSchema=new mongoose.Schema({
         user:{
             type: ObjectId,
         }
+    }],
+    posts:[{
+        post:{
+            type: ObjectId,
+        }
     }]
 
 },{
