@@ -12,8 +12,8 @@ const groupSchema=new mongoose.Schema({
         type: String,
     },
     users:[{
-        user:{
-            type: ObjectId,
+        email:{
+            type: String,
         }
     }],
     posts:[{

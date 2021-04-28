@@ -4,7 +4,8 @@ const mongoose=require('mongoose');
 
 const postSchema=new mongoose.Schema({
     nguoiPost:{
-        type: ObjectId,
+        type: String,
+        required: true,
     },
     moTa:{
         type: String,
@@ -17,12 +18,29 @@ const postSchema=new mongoose.Schema({
             type: ObjectId,
         },
     }],
-    videoLinkPath:{
-        type: String,
-    },
+    videosLinkPath:[{
+        video:{
+            type: String,
+
+        },
+        watchedStudent:[{
+          student:{
+              type: String,
+          }  
+        }]
+    }],
     pictureLinkPath:{
         type: String,
     },
+    pdfLinkPath:[{
+        pdf:{
+            type: String,
+        },
+        read:{
+            type: Boolean,
+            default: false,
+        }
+    }]
 
 },{
     timestamps:true,

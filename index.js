@@ -1,6 +1,8 @@
 const express= require('express');
 require('./db/mongoose');
 const userRouter=require('./routers/user');
+const groupRouter=require('./routers/group');
+const postRouter= require('./routers/post');
 const { ReplSet } = require('mongodb');
 const { response } = require('express');
 const cors=require('cors');
@@ -12,6 +14,10 @@ app.use(express.json());
 app.use(cors());
 
 app.use(userRouter);
+
+app.use(groupRouter);
+
+app.use(postRouter);
 
 app.listen(port,()=>{
     console.log(`Server is up at ${port}`);
