@@ -33,6 +33,15 @@ class postController{
             res.status(400).json({error:"something happened"})
         }
     }
+    async getAllPost(req,res){
+        try{
+
+            const allPost= await Post.find();
+            res.status(200).send(allPost); 
+        } catch (e){
+            res.status(400).json({error:"somethign wrong happened"});
+        }
+    }
 }
 
 module.exports= new postController();

@@ -26,7 +26,7 @@ class groupController{
 
     async getAllMember(req, res){
         const group= await Group.findOne({ten: req.body.ten});
-        let userMap=[];
+        var userMap=[];
         try{
             if (!group){
                 res.status(404).json({message:"group not found!"});

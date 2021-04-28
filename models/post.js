@@ -36,10 +36,12 @@ const postSchema=new mongoose.Schema({
         pdf:{
             type: String,
         },
-        read:{
-            type: Boolean,
-            default: false,
+        watchtedStudent:[{
+            student:{
+                type: String,
+            }
         }
+        ]
     }]
 
 },{

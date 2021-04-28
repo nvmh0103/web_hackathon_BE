@@ -9,7 +9,7 @@ router.post('/posts',auth,postController.createPost);
 
 router.post('/posts/watched',auth,postController.addWatchedStudent);
 
-
+router.get('/posts',auth,postController.getAllPost)
 
 
 
