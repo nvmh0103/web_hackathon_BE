@@ -7,7 +7,6 @@ class postController{
         try{
             post.nguoiPost=req.user.email;
             await post.save();
-            console.log(post);
             res.status(200).json({message:"OK"});
         }catch (e){
             res.status(400).json({error:"something wrong happend"});

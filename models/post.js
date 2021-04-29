@@ -10,14 +10,6 @@ const postSchema=new mongoose.Schema({
     moTa:{
         type: String,
     },
-    likes:{
-        type: Number,
-    },
-    comments:[{
-        comment:{
-            type: ObjectId,
-        },
-    }],
     videosLinkPath:[{
         video:{
             type: String,

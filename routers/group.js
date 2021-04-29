@@ -11,6 +11,8 @@ router.post('/groups/member',auth,groupController.addMember);
 
 router.get('/groups/allMember',groupController.getAllMember);
 
+router.get('/groups',groupController.getAllGroup);
+
 // router.post('/groups/postHs',auth,groupController.addPostHs);
 
 // router.post('/groups/postGv',authGv,groupController.addPostGv);

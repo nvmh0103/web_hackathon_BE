@@ -51,6 +51,11 @@ const userSchema= new mongoose.Schema({
         type: String,
         default: '',
     },
+    joinedGroup:[{
+        group:{
+            type: String,
+        }
+    }],
     tokens:[{
         token:{
             type: String,

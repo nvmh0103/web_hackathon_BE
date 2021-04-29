@@ -11,6 +11,9 @@ const groupSchema=new mongoose.Schema({
     nguoiTao:{
         type: String,
     },
+    siSo:{
+        type: Number,
+    },
     users:[{
         email:{
             type: String,

@@ -14,7 +14,11 @@ class groupController{
     }
     async addMember(req, res){
         const group= await Group.findOne({ten: req.body.ten});
-        const email=req.body.email;
+        if (!group){
+            res.status(404).json({message:"not found!"});
+            return
+        }
+        const email= req.user.email;
         group.users=group.users.concat({email});
         try{
             await group.save();
@@ -26,24 +30,39 @@ class groupController{
 
     async getAllMember(req, res){
         const group= await Group.findOne({ten: req.body.ten});
-        var userMap=[];
+        var emailList=[];
         try{
             if (!group){
                 res.status(404).json({message:"group not found!"});
             }
             
             group.users.forEach(async (member) => {
-                
-                const user= await User.findOne({email:member.email});
-                console.log(user);
-                userMap.push(user);
+                emailList=emailList.concat(member.email);
+
             })
-            console.log(userMap);
-            res.status(200).send(JSON.stringify(userMap));
+            const user= await User.find({
+                "email": { $in: emailList}
+            })
+            
+            res.status(200).send(user);
         } catch (e){
             res.status(400).json({message:"erorr"});
         }
     }
+    async getAllGroup(req, res){
+        const group= await Group.find();
+        try{
+            if (!group){
+                res.status(400).json({error: "no group"});
+
+            }   
+            res.status(200).send(group);
+
+        } catch(e){
+            res.status(400).json({error:"something happened!"})
+        }
+    }
 }
+
 
 module.exports= new groupController();
