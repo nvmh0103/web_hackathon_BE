@@ -166,6 +166,9 @@ class userController{
         res.status(400).send(e);
         }
     }
+    async getGroup(req, res){
+        res.status(200).send(req.user.joinedGroup);
+    }
 }
 
 module.exports = new userController();

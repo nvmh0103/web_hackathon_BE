@@ -30,6 +30,8 @@ router.delete('/users/me', auth, userController.deleteUser);
 // change user
 router.patch('/users/me', auth,userController.changeUser);
 
+router.get('/users/group',auth,userController.getGroup);
+
 
 // router.get('/users/getEmail', async(req, res) =>{
 //     try {

@@ -19,6 +19,8 @@ class groupController{
             return
         }
         const email= req.user.email;
+        req.user.joinedGroup=req.user.joinedGroup.concat({group: group.ten});
+        await req.user.save();
         group.users=group.users.concat({email});
         try{
             await group.save();
